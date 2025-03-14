@@ -1,0 +1,101 @@
+<!-- AYk5LNbjON0Qmy8V1eJH_mAHBr-QcC-6C7RwB__RXiOWqCbPH3naWuHdYg2ZrMTejtxZKL6D7hOIPR0q -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Donation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0070ba;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005ea6;
+        }
+        .paypal-button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Support Our Cause</h1>
+    <p>Enter the amount you’d like to donate:</p>
+
+    <div class="input-group">
+        <input type="number" id="donation-amount" placeholder="Enter amount" min="1" step="0.01">
+    </div>
+
+    <div id="paypal-button-container" class="paypal-button-container"></div>
+</div>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AYk5LNbjON0Qmy8V1eJH_mAHBr-QcC-6C7RwB__RXiOWqCbPH3naWuHdYg2ZrMTejtxZKL6D7hOIPR0q&currency=USD"></script>
+
+<script>
+    // Render the PayPal button
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            const amount = document.getElementById('donation-amount').value;
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid donation amount.');
+                return;
+            }
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: amount
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('Thank you for your donation, ' + details.payer.name.given_name + '!');
+            });
+        },
+        onError: function(err) {
+            alert('Something went wrong. Please try again.');
+        }
+    }).render('#paypal-button-container');
+</script>
+
+</body>
+</html>
